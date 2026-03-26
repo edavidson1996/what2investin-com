@@ -162,70 +162,29 @@
     </div>
 
     <!-- Notify form -->
-    <p class="notify-label">Get notified when we launch</p>
-    <div class="notify-row">
-      <input id="notify-email" type="email" placeholder="your@email.com" />
-      <button id="notify-btn" type="button">Notify me</button>
+    <div id="form-section">
+      <p class="notify-label">Get notified when we launch</p>
+      <form class="notify-row" method="POST" action="https://2f7a4a1d.sibforms.com/serve/MUIFAFI4Ak2wKHffOnT859noG-GcgFQNkcM5E4JXLGf1WAh-JfMR3tsPQJr-c2MDn9lqR1Ks3QrrfO6tr8xz3NlJXhndH7sneYCCdOabrZT4CCzoXLLfyRUDvrooTddfa84PQKtO_F7Kyh9Jp4VvjoA5HwpdWBV7uWRq4UD3wrgvngvJldBP_9CCBdiCvVoJfZ13058Se8nOjAcKCQ==">
+        <input type="email" name="EMAIL" placeholder="your@email.com" required />
+        <input type="text" name="email_address_check" value="" style="display:none;">
+        <input type="hidden" name="locale" value="en">
+        <button type="submit">Notify me</button>
+      </form>
     </div>
-    <p id="notify-msg" style="font-size:0.85rem;margin-top:0.75rem;min-height:1.4em;"></p>
+    <div id="success-section" style="display:none; margin-bottom:1.5rem;">
+      <p style="font-size:1.1rem; color:#3fb950; font-weight:600;">✓ You're on the list!</p>
+      <p style="font-size:0.9rem; color:#8b949e; margin-top:0.4rem;">We'll let you know the moment we launch.</p>
+    </div>
 
     <p class="footer">&copy; 2026 What2InvestIn &nbsp;·&nbsp; what2investin.com</p>
   </div>
 
   <script>
-    document.getElementById('notify-btn').addEventListener('click', async function () {
-      const input = document.getElementById('notify-email');
-      const msg   = document.getElementById('notify-msg');
-      const btn   = this;
-      const email = input.value.trim();
-
-      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        msg.style.color = '#f85149';
-        msg.textContent = 'Please enter a valid email address.';
-        return;
-      }
-
-      btn.disabled = true;
-      btn.textContent = 'Sending…';
-      msg.textContent = '';
-
-      try {
-        const res = await fetch('https://api.brevo.com/v3/contacts', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'api-key': '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'
-          },
-          body: JSON.stringify({ email: email, listIds: [2], updateEnabled: true })
-        });
-
-        if (res.status === 201 || res.status === 204 || res.status === 200) {
-          input.value = '';
-          btn.textContent = "✓ You're on the list!";
-          btn.style.background = '#238636';
-          msg.style.color = '#3fb950';
-          msg.textContent = "We'll let you know the moment we launch.";
-        } else {
-          const data = await res.json().catch(() => ({}));
-          if (data.code === 'duplicate_parameter') {
-            btn.disabled = false;
-            btn.textContent = 'Notify me';
-            msg.style.color = '#58a6ff';
-            msg.textContent = 'Already on the list — we\'ll be in touch!';
-          } else {
-            btn.disabled = false;
-            btn.textContent = 'Notify me';
-            msg.style.color = '#f85149';
-            msg.textContent = 'Error ' + res.status + ': ' + (data.message || data.code || 'please try again.');
-          }
-        }
-      } catch (e) {
-        btn.disabled = false;
-        btn.textContent = 'Notify me';
-        msg.style.color = '#f85149';
-        msg.textContent = 'Network error — please try again.';
-      }
-    });
+    // Show success message if Brevo redirected back with ?subscribed=1
+    if (new URLSearchParams(window.location.search).get('subscribed') === '1') {
+      document.getElementById('form-section').style.display = 'none';
+      document.getElementById('success-section').style.display = 'block';
+    }
   </script>
 </body>
 </html>
