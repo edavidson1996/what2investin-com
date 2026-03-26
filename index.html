@@ -190,11 +190,68 @@
     <!-- Email notify -->
     <p class="notify-label">Get notified when we launch</p>
     <div class="notify-row">
-      <input type="email" placeholder="your@email.com" />
-      <button type="button">Notify me</button>
+      <input id="notify-email" type="email" placeholder="your@email.com" />
+      <button id="notify-btn" type="button">Notify me</button>
     </div>
+    <p id="notify-msg" style="font-size:0.85rem;margin-top:0.75rem;min-height:1.2em;"></p>
 
     <p class="footer">&copy; 2026 What2InvestIn &nbsp;·&nbsp; what2investin.com</p>
   </div>
+
+  <script>
+    document.getElementById('notify-btn').addEventListener('click', async function () {
+      const input = document.getElementById('notify-email');
+      const msg   = document.getElementById('notify-msg');
+      const btn   = this;
+      const email = input.value.trim();
+
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        msg.style.color = '#f85149';
+        msg.textContent = 'Please enter a valid email address.';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+      msg.textContent = '';
+
+      try {
+        const res = await fetch('https://api.brevo.com/v3/contacts', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'api-key': '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'
+          },
+          body: JSON.stringify({ email: email, listIds: [2], updateEnabled: true })
+        });
+
+        if (res.status === 201 || res.status === 204) {
+          input.value = '';
+          btn.textContent = '✓ You\'re on the list!';
+          btn.style.background = '#238636';
+          msg.style.color = '#3fb950';
+          msg.textContent = 'We\'ll let you know the moment we launch.';
+        } else {
+          const data = await res.json().catch(() => ({}));
+          if (data.code === 'duplicate_parameter') {
+            btn.textContent = 'Already signed up!';
+            btn.style.background = '#1f6feb';
+            msg.style.color = '#58a6ff';
+            msg.textContent = 'This email is already on the waitlist.';
+          } else {
+            btn.disabled = false;
+            btn.textContent = 'Notify me';
+            msg.style.color = '#f85149';
+            msg.textContent = 'Something went wrong — please try again.';
+          }
+        }
+      } catch (e) {
+        btn.disabled = false;
+        btn.textContent = 'Notify me';
+        msg.style.color = '#f85149';
+        msg.textContent = 'Network error — please try again.';
+      }
+    });
+  </script>
 </body>
 </html>
