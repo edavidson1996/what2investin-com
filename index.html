@@ -242,14 +242,14 @@
             btn.disabled = false;
             btn.textContent = 'Notify me';
             msg.style.color = '#f85149';
-            msg.textContent = 'Something went wrong — please try again.';
+            msg.textContent = 'Error ' + res.status + ': ' + (data.message || data.code || JSON.stringify(data));
           }
         }
       } catch (e) {
         btn.disabled = false;
         btn.textContent = 'Notify me';
         msg.style.color = '#f85149';
-        msg.textContent = 'Network error — please try again.';
+        msg.textContent = 'Network error: ' + e.message;
       }
     });
   </script>
