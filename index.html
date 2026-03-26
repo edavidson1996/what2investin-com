@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>What2InvestIn – Coming Soon</title>
 
-
   <!-- Page styles -->
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,14 +27,18 @@
       text-align: center;
     }
 
-    /* Logo */
+    /* Logo — responsive: full width up to 360px */
     .icon-wrap {
       margin: 0 auto 2rem;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    .icon-wrap img { width: 220px; height: auto; }
+    .icon-wrap img {
+      width: 100%;
+      max-width: 360px;
+      height: auto;
+    }
 
     .tagline {
       font-size: 1.05rem;
@@ -95,43 +98,24 @@
 
     .footer { font-size: 0.78rem; color: #484f58; margin-top: 2rem; }
 
-    /* Notify form */
+    /* Brevo iframe wrapper */
     .notify-label { font-size: 0.95rem; color: #8b949e; margin-bottom: 0.85rem; }
-    .notify-row {
-      display: flex;
-      gap: 0.6rem;
+    .brevo-wrap {
       max-width: 420px;
-      margin: 0 auto 0.5rem;
+      margin: 0 auto;
     }
-    .notify-row input {
-      flex: 1;
-      background: #161b22;
-      border: 1px solid #30363d;
+    .brevo-wrap iframe {
+      width: 100%;
+      height: 160px;
+      border: none;
+      display: block;
+      /* Invert Brevo's white background to match dark theme */
+      filter: invert(1) hue-rotate(180deg);
       border-radius: 8px;
-      padding: 0.75rem 1rem;
-      font-size: 1rem;
-      color: #e6edf3;
-      outline: none;
-      transition: border-color 0.2s;
-      min-width: 0;
     }
-    .notify-row input:focus { border-color: #58a6ff; }
-    .notify-row input::placeholder { color: #484f58; }
-    .notify-row button {
-      background: #238636;
-      border: 1px solid #2ea043;
-      border-radius: 8px;
-      padding: 0.75rem 1.4rem;
-      font-size: 1rem;
-      font-weight: 600;
-      color: #fff;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background 0.2s;
-      flex-shrink: 0;
-    }
-    .notify-row button:hover { background: #2ea043; }
-    .notify-row button:disabled { opacity: 0.7; cursor: default; }
+
+    /* Success message (shown after redirect back with ?subscribed=1) */
+    #success-section { margin-bottom: 1.5rem; }
 
   </style>
 </head>
@@ -164,19 +148,21 @@
     <!-- Notify form -->
     <div id="form-section">
       <p class="notify-label">Get notified when we launch</p>
-      <form class="notify-row" method="POST" action="https://2f7a4a1d.sibforms.com/serve/MUIFAFI4Ak2wKHffOnT859noG-GcgFQNkcM5E4JXLGf1WAh-JfMR3tsPQJr-c2MDn9lqR1Ks3QrrfO6tr8xz3NlJXhndH7sneYCCdOabrZT4CCzoXLLfyRUDvrooTddfa84PQKtO_F7Kyh9Jp4VvjoA5HwpdWBV7uWRq4UD3wrgvngvJldBP_9CCBdiCvVoJfZ13058Se8nOjAcKCQ==">
-        <input type="email" name="EMAIL" placeholder="your@email.com" required />
-        <input type="text" name="email_address_check" value="" style="display:none;">
-        <input type="hidden" name="locale" value="en">
-        <button type="submit">Notify me</button>
-      </form>
+      <div class="brevo-wrap">
+        <iframe
+          src="https://2f7a4a1d.sibforms.com/serve/MUIFAFI4Ak2wKHffOnT859noG-GcgFQNkcM5E4JXLGf1WAh-JfMR3tsPQJr-c2MDn9lqR1Ks3QrrfO6tr8xz3NlJXhndH7sneYCCdOabrZT4CCzoXLLfyRUDvrooTddfa84PQKtO_F7Kyh9Jp4VvjoA5HwpdWBV7uWRq4UD3wrgvngvJldBP_9CCBdiCvVoJfZ13058Se8nOjAcKCQ=="
+          scrolling="no"
+          allowfullscreen
+          title="Email signup">
+        </iframe>
+      </div>
     </div>
-    <div id="success-section" style="display:none; margin-bottom:1.5rem;">
-      <p style="font-size:1.1rem; color:#3fb950; font-weight:600;">✓ You're on the list!</p>
+    <div id="success-section" style="display:none;">
+      <p style="font-size:1.1rem; color:#3fb950; font-weight:600;">&#10003; You're on the list!</p>
       <p style="font-size:0.9rem; color:#8b949e; margin-top:0.4rem;">We'll let you know the moment we launch.</p>
     </div>
 
-    <p class="footer">&copy; 2026 What2InvestIn &nbsp;·&nbsp; what2investin.com</p>
+    <p class="footer">&copy; 2026 What2InvestIn &nbsp;&middot;&nbsp; what2investin.com</p>
   </div>
 
   <script>
